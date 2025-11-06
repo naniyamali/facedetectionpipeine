@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/gith
+env/
+.env/
+
+# IDE
+.vscode/
+.idea/
+
+# Model weights and checkpoints that get downloaded
+*.pt
+*.pth
+
+# Logs
+*.log
+
+# Test images
+test_images/
