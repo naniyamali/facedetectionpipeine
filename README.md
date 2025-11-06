@@ -9,6 +9,7 @@ A reliable face verification tool using PyTorch-based face detection and recogni
 - Easy-to-use interface that returns "matched"/"not matched"
 - Detailed confidence scores and proper error handling
 - Works reliably on Windows (no TensorFlow dependency issues)
+-once the image is done with getting all the vector then we could go for cosine similarity
 
 ## Installation
 
@@ -37,7 +38,7 @@ print(result)  # "matched" or "not matched"
 python verify_with_facenet.py  # Uses default test images
 ```
 
-## API
+
 
 The main verification function returns three values:
 - `is_match`: Boolean indicating if faces match
