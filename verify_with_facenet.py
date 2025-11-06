@@ -37,9 +37,7 @@ def preprocess_face(image, target_size=(160, 160)):
     return face_rgb
 
 
-# -------------------------------------------------------------
-# 2. Image Loader
-# -------------------------------------------------------------
+#using cv2.imread()
 def load_image(image_path):
     """Loads an image from a path and returns both np.array and PIL.Image."""
     if not os.path.isfile(image_path):
@@ -61,6 +59,7 @@ def verify_faces(img1_path, img2_path, threshold=0.6):
     a sub method here written is extract face
 
     Returns:
+        True if the face is detected, False otherwise.
         (is_match: bool, confidence: float, success: bool)
     """
 
@@ -74,7 +73,7 @@ def verify_faces(img1_path, img2_path, threshold=0.6):
         """Try extracting a face with MTCNN first, fallback to Haar Cascade."""
         img_rgb, img_pil = load_image(img_path)
 
-        # --- Try with MTCNN ---
+        # multi task cascade network c
         face_tensor = mtcnn(img_pil)
         if face_tensor is not None:
             print(f" MTCNN successfully detected a face in {os.path.basename(img_path)}")
@@ -100,12 +99,12 @@ def verify_faces(img1_path, img2_path, threshold=0.6):
         print("Could not detect face in one or both images.")
         return False, 0.0, False
 
-    # embeddings will be passed in resnet
+    # embeddings will be passed in resnet i mean the faces here
     with torch.no_grad():
         emb1 = resnet(face1)
         emb2 = resnet(face2)
 
-    # --- Cosine Similarity ---
+    # --- Cosine Similarity ---,dotproduct of vectors by root of sum of squares of distances
     cos = torch.nn.CosineSimilarity(dim=1)
     similarity = cos(emb1, emb2).item()
     distance = 1 - similarity
@@ -120,11 +119,10 @@ def verify_faces(img1_path, img2_path, threshold=0.6):
     return is_match, similarity, True
 
 
-# -------------------------------------------------------------
-# 4. Main entry point
-# -------------------------------------------------------------
+
 def main():
     # Replace with your image paths
+    #for testing purpose we could go as low similarity we could be proceed
     img1_path = r"C:\Users\Y NANI\Downloads\images\WhatsApp Image 2025-11-05 at 12.56.10_1c6c03b0.jpg"
     img2_path = r"C:\Users\Y NANI\Downloads\images\WIN_20251105_14_36_40_Pro.jpg"
 
@@ -138,8 +136,6 @@ def main():
         print("\n Verification failed - no valid faces detected.")
 
 
-# -------------------------------------------------------------
-# Run script
-# -------------------------------------------------------------
+#if we launch the process here the flow will go with verify faces then the extra face will be called
 if __name__ == '__main__':
     main()
