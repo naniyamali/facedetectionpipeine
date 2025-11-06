@@ -1,5 +1,6 @@
 from verify_with_facenet import verify_faces
-
+import Flask
+@app.route('/api/returnresult', methods=['POST'])
 def verify_pan(img1_path, img2_path):
     """Drop-in replacement for the original verify_pan function.
     Returns "matched" or "not matched" to maintain compatibility."""
