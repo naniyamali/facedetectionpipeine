@@ -1,7 +1,7 @@
 from verify_with_facenet import verify_faces
 import cv2
 import matplotlib.pyplot as plt
-#import Flask
+#import Flask ajdljlj
 """
 @app.route('/api/returnresult', methods=['POST'])
 def verify_pan(img1_path, img2_path):
