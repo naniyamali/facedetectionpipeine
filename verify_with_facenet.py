@@ -22,7 +22,7 @@ def preprocess_face(image, target_size=(160, 160)):
     if len(faces) == 0:
         return None
 
-    # Select the largest detected face (primary face)
+    # Select the largest detected face (primary face) bring out bigggest rectangle
     x, y, w, h = max(faces, key=lambda rect: rect[2] * rect[3])
     face_img = image[y:y + h, x:x + w]
 
@@ -48,6 +48,7 @@ def load_image(image_path):
         raise ValueError(f"Could not read image: {image_path}")
 
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    #here opencvnumpymatplotlib expects ndin array , they both are same but keeping them in pixel wrapper it returns under pixel object  while passing mtcnn expects pixel so we are doing like this
     return img_rgb, Image.fromarray(img_rgb)
 
 
@@ -70,8 +71,10 @@ def verify_faces(img1_path, img2_path, threshold=0.6):
     resnet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
 
     def extract_face(img_path):
-        """Try extracting a face with MTCNN first, fallback to Haar Cascade."""
+
         img_rgb, img_pil = load_image(img_path)
+        #print(img_rgb)
+        #print("jsd",img_pil)
 
         # multi task cascade network c
         face_tensor = mtcnn(img_pil)
@@ -79,7 +82,7 @@ def verify_faces(img1_path, img2_path, threshold=0.6):
             print(f" MTCNN successfully detected a face in {os.path.basename(img_path)}")
             return face_tensor.unsqueeze(0)
 
-        # --- Fallback to Haar Cascade ---
+        # --- Fallback to Haar Cascade --- if mtcnn fails to detect then go it will go haarcascade
         print(f" MTCNN failed for {os.path.basename(img_path)} → trying Haar Cascade...")
         img_cv = cv2.imread(img_path)
         face_np = preprocess_face(img_cv)
@@ -103,6 +106,8 @@ def verify_faces(img1_path, img2_path, threshold=0.6):
     with torch.no_grad():
         emb1 = resnet(face1)
         emb2 = resnet(face2)
+        #print("embi",emb1)
+        #print("emb2",emb2)
 
     # --- Cosine Similarity ---,dotproduct of vectors by root of sum of squares of distances
     cos = torch.nn.CosineSimilarity(dim=1)
@@ -123,17 +128,17 @@ def verify_faces(img1_path, img2_path, threshold=0.6):
 def main():
     # Replace with your image paths
     #for testing purpose we could go as low similarity we could be proceed
-    img1_path = r"C:\Users\Y NANI\Downloads\images\WhatsApp Image 2025-11-05 at 12.56.10_1c6c03b0.jpg"
-    img2_path = r"C:\Users\Y NANI\Downloads\images\WIN_20251105_14_36_40_Pro.jpg"
+    img1_paths = r"C:\Users\Y NANI\OneDrive\Pictures\Camera Roll\WIN_20251107_12_35_44_Pro.jpg"
+    img2_paths = [r"C:\Users\Y NANI\Downloads\images\WIN_20251105_14_36_40_Pro.jpg",r"C:\Users\Y NANI\OneDrive\Pictures\Camera Roll\WIN_20251106_11_01_34_Pro.jpg",r"C:\Users\Y NANI\OneDrive\Pictures\Camera Roll\WIN_20251105_14_12_04_Pro.jpg"]
 
     print(" Starting face verification...\n")
-    is_match, confidence, success = verify_faces(img1_path, img2_path)
-
-    if success:
-        result = "matched" if is_match else "not matched"
-        print(f"\n Final Result: Faces are {result} (confidence: {confidence:.4f})")
-    else:
-        print("\n Verification failed - no valid faces detected.")
+    for i in img2_paths,img1_paths:
+        is_match, confidence, success = verify_faces(img1_path, i)
+        if success:
+            result = "matched" if is_match else "not matched"
+            print(f"\n Final Result: Faces are {result} (confidence: {confidence:.4f})")
+        else:
+            print("\n Verification failed - no valid faces detected.")
 
 
 #if we launch the process here the flow will go with verify faces then the extra face will be called
