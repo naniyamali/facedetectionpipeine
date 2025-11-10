@@ -132,8 +132,8 @@ def main():
     img2_paths = [r"C:\Users\Y NANI\Downloads\images\WIN_20251105_14_36_40_Pro.jpg",r"C:\Users\Y NANI\OneDrive\Pictures\Camera Roll\WIN_20251106_11_01_34_Pro.jpg",r"C:\Users\Y NANI\OneDrive\Pictures\Camera Roll\WIN_20251105_14_12_04_Pro.jpg"]
 
     print(" Starting face verification...\n")
-    for i in img2_paths,img1_paths:
-        is_match, confidence, success = verify_faces(img1_path, i)
+    for i in img2_paths:
+        is_match, confidence, success = verify_faces(img1_paths, i)
         if success:
             result = "matched" if is_match else "not matched"
             print(f"\n Final Result: Faces are {result} (confidence: {confidence:.4f})")
