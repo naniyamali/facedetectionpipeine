@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Face detection</title>
+</head>
+
+<body>
+<button id="getFaceDetection">Get Face Detection</button>
+<script>
+    // Build API URL so this page works when served by the Flask app
+    // (e.g. http://127.0.0.1:5000/) or when opened directly from the file system.
+    const API_URL = (location.protocol === 'file:')
+        ? 'http://127.0.0.1:5000/api/returnresult'
+        : `${location.origin}/api/returnresult`;
+
+    async function getFaceDetection() {
+        try {
+            const resp = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            });
+
+            if (!resp.ok) {
+                throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
+            }
+
+            const data = await resp.json();
+            // Use alert for simplicity in this demo
+            alert(data.msg);
+        } catch (err) {
+            console.error('API call failed:', err);
+            alert('Error calling API: ' + err.message);
+        }
+    }
+
+    document.getElementById('getFaceDetection').addEventListener('click', getFaceDetection);
+</script>
+</body>
+</html>
